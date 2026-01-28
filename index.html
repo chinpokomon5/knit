@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Knit Pop! Mobile</title>
+    <title>Knit Pop! Live</title>
+    
+    <link rel="manifest" href="data:application/json;base64,ewogICAgIm5hbWUiOiAiS25pdCBQb3AhIiwKICAgICJzaG9ydF9uYW1lIjogIktuaXQgUG9wIiwKICAgICJzdGFydF91cmwiOiAiLiIsCiAgICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAgICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNBMEU3RTUiLAogICAgInRoZW1lX2NvbG9yIjogIiNBMEU3RTUiLAogICAgImljb25zIjogWwogICAgICAgIHsKICAgICAgICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8zNzUzLzM3NTMwNDYucG5nIiwKICAgICAgICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAgICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICAgICAgfQogICAgXQp9">
+    
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #A0E7E5;
             --card-bg: #FFFFFF;
             --accent-pink: #FF99AC;
-            --accent-yellow: #FBE7C6;
-            --text-dark: #2E2E2E;
             --btn-color: #B4F8C8;
             --btn-shadow: #76C893;
             --history-knit: #D0F4DE;
@@ -30,12 +31,24 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Main body no scroll */
+            overflow: hidden;
         }
 
-        /* --- MAIN STAGE (Top Section) --- */
+        /* --- NOTIFICATION REQUEST BANNER --- */
+        #permBtn {
+            display: none; /* Hidden by default */
+            background: #FF6B6B;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        /* --- MAIN STAGE --- */
         .main-stage {
-            flex: 0 0 auto; /* Don't shrink */
+            flex: 0 0 auto;
             padding: 20px 20px 10px 20px;
             display: flex;
             justify-content: center;
@@ -45,7 +58,7 @@
         .card {
             background: var(--card-bg);
             width: 100%;
-            max-width: 450px; /* Phone width limit */
+            max-width: 450px;
             border-radius: 35px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             padding: 25px 20px;
@@ -54,7 +67,6 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            position: relative;
         }
 
         /* --- TRACKER & DOTS --- */
@@ -78,7 +90,7 @@
             border-radius: 50%;
             background-color: #eee;
             border: 3px solid #ddd;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s;
             font-family: 'Fredoka One', cursive;
             display: flex;
             align-items: center;
@@ -86,9 +98,7 @@
             color: white;
             font-size: 1.1rem;
         }
-
         .dot::after { content: attr(data-num); }
-
         .dot.active {
             transform: scale(1.3);
             background-color: #FF6B6B;
@@ -101,7 +111,6 @@
             color: #FF6B6B;
             font-size: 1.5rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         /* --- INSTRUCTION --- */
@@ -115,17 +124,15 @@
             padding: 15px;
             border: 3px dashed #FBE7C6;
         }
-
         .instruction-text {
             font-size: 1.4rem;
             font-weight: 800;
             color: #4ECDC4;
             line-height: 1.3;
         }
-        
         .special-text { color: #FF6B6B; }
 
-        /* --- BUTTON --- */
+        /* --- BUTTONS --- */
         .btn-main {
             background-color: var(--btn-color);
             border: none;
@@ -138,17 +145,13 @@
             box-shadow: 0 8px 0 var(--btn-shadow);
             transition: all 0.1s;
             width: 100%;
-            margin-top: 5px;
             touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
         }
-
         .btn-main:active {
             transform: translateY(8px);
             box-shadow: 0 0 0 var(--btn-shadow);
         }
 
-        /* --- FOOTER (Reset & Total) --- */
         .card-footer {
             display: flex;
             justify-content: space-between;
@@ -157,18 +160,14 @@
             padding-top: 10px;
             border-top: 2px solid #f0f0f0;
         }
-
         .reset-btn {
             background: none;
             border: none;
             color: #aaa;
             font-weight: bold;
-            cursor: pointer;
             font-size: 0.85rem;
             text-decoration: underline;
-            padding: 10px;
         }
-
         .total-counter {
             background: #eee;
             padding: 5px 12px;
@@ -178,21 +177,19 @@
             color: #777;
         }
 
-        /* --- HISTORY SECTION (Bottom) --- */
+        /* --- HISTORY --- */
         .history-container {
-            flex: 1 1 auto; /* Grow to fill space */
+            flex: 1 1 auto;
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(8px);
             border-top-left-radius: 30px;
             border-top-right-radius: 30px;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
             padding: 20px;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Contain scroll */
+            overflow: hidden;
             margin-top: 10px;
         }
-
         .history-header {
             font-family: 'Fredoka One', cursive;
             color: var(--text-dark);
@@ -200,18 +197,15 @@
             margin-bottom: 10px;
             text-align: center;
             opacity: 0.5;
-            flex-shrink: 0;
         }
-
         .history-list {
             flex-grow: 1;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            padding-bottom: 30px; /* Space for scrolling */
+            padding-bottom: 30px;
         }
-
         .history-item {
             background: white;
             border-radius: 12px;
@@ -225,7 +219,6 @@
             font-size: 0.9rem;
             flex-shrink: 0;
         }
-
         .h-row-num {
             background: #fff;
             padding: 3px 8px;
@@ -234,21 +227,17 @@
             color: #888;
             border: 1px solid #eee;
         }
-
         .type-knit { background-color: var(--history-knit); color: #2d6a4f; border-left: 5px solid #B7E4C7; }
         .type-pattern { background-color: var(--history-pattern); color: #c9184a; border-left: 5px solid #FFB3C1; }
-
-        @keyframes slideUp {
-            0% { transform: translateY(20px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
+    <div id="permBtn" onclick="requestPermission()">⚠️ Tap here to enable Progress Notifications</div>
+
     <div class="main-stage">
         <div class="card">
-            
             <div class="tracker-container">
                 <div class="progress-dots">
                     <div class="dot active" id="dot1" data-num="1"></div>
@@ -268,76 +257,92 @@
                 <button class="reset-btn" onclick="resetCounter()">Reset All</button>
                 <div class="total-counter">Total: <span id="totalRowsDisplay">1</span></div>
             </div>
-
         </div>
     </div>
 
     <div class="history-container">
         <div class="history-header">HISTORY LOG</div>
         <div class="history-list" id="historyList">
-            <div style="text-align:center; color:#999; font-size: 0.9rem; margin-top:20px; font-style:italic;" id="emptyMsg">
-                Ready to knit?
-            </div>
+            <div style="text-align:center; color:#999; font-size: 0.9rem; margin-top:20px; font-style:italic;" id="emptyMsg">Ready?</div>
         </div>
     </div>
 
     <script>
         let totalRows = 1;
-        
-        // Pattern logic: 0=Row1, 1=Row2, 2=Row3
-        const instructions = [
-            "Just <b>Knit</b>",
-            "Just <b>Knit</b>",
-            "K2, <span class='special-text'>*(yo, k2tog)</span> to last 2, K2"
-        ];
-
-        const historyDescriptions = [
-            "Row 1 (Knit)",
-            "Row 2 (Knit)",
-            "Row 3 (Pattern)"
-        ];
-
+        const instructions = ["Just <b>Knit</b>", "Just <b>Knit</b>", "K2, <span class='special-text'>*(yo, k2tog)</span> to last 2, K2"];
+        const historyDescriptions = ["Row 1 (Knit)", "Row 2 (Knit)", "Row 3 (Pattern)"];
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        // 1. Standard Bubble Pop
-        function playPopSound() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
-
-            gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.15);
+        // --- PWA / SERVICE WORKER SETUP ---
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('SW Registered!', reg))
+                .catch(err => console.log('SW Failed', err));
         }
 
-        // 2. Special "Cha-Ching / Bell" Sound
+        // Check Notification Permissions on load
+        if (Notification.permission === 'default') {
+            document.getElementById('permBtn').style.display = 'block';
+        }
+
+        function requestPermission() {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    document.getElementById('permBtn').style.display = 'none';
+                    updateSystemStatus(); // Update immediately on grant
+                }
+            });
+        }
+
+        function updateSystemStatus() {
+            // 1. Badging API (Shows number on app icon)
+            if ('setAppBadge' in navigator) {
+                navigator.setAppBadge(totalRows).catch(error => {
+                    // Fail silently if not installed/supported
+                });
+            }
+
+            // 2. Send message to Service Worker for Notification
+            if (Notification.permission === 'granted' && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({
+                    type: 'UPDATE_ROW',
+                    row: totalRows
+                });
+            }
+        }
+
+        // --- EXISTING APP LOGIC ---
+
+        function playPopSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.15);
+        }
+
         function playSuccessSound() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
-
             const now = audioCtx.currentTime;
             
-            // Oscillator 1: High tone
             const osc1 = audioCtx.createOscillator();
             const gain1 = audioCtx.createGain();
             osc1.type = 'triangle';
-            osc1.frequency.setValueAtTime(1200, now); // Bell tone
+            osc1.frequency.setValueAtTime(1200, now);
             gain1.gain.setValueAtTime(0.1, now);
             gain1.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
             
-            // Oscillator 2: Harmonic
             const osc2 = audioCtx.createOscillator();
             const gain2 = audioCtx.createGain();
             osc2.type = 'sine';
-            osc2.frequency.setValueAtTime(2400, now); // Harmonic
+            osc2.frequency.setValueAtTime(2400, now);
             gain2.gain.setValueAtTime(0.1, now);
             gain2.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
 
@@ -345,77 +350,56 @@
             osc2.connect(gain2);
             gain1.connect(audioCtx.destination);
             gain2.connect(audioCtx.destination);
-
-            osc1.start();
-            osc2.start();
-            osc1.stop(now + 1.5);
-            osc2.stop(now + 1.5);
+            osc1.start(); osc2.start();
+            osc1.stop(now + 1.5); osc2.stop(now + 1.5);
         }
 
         function updateUI() {
             document.getElementById('totalRowsDisplay').innerText = totalRows;
-            
             const patternIndex = (totalRows - 1) % 3;
             const currentPatternRow = patternIndex + 1;
-            
             document.getElementById('patternLabel').innerText = "ROW " + currentPatternRow;
             document.getElementById('instruction').innerHTML = instructions[patternIndex];
-
-            // Update Dots
+            
             document.getElementById('dot1').classList.remove('active');
             document.getElementById('dot2').classList.remove('active');
             document.getElementById('dot3').classList.remove('active');
             document.getElementById('dot' + currentPatternRow).classList.add('active');
+
+            // Trigger PWA updates
+            updateSystemStatus();
         }
 
         function addToHistory(rowNum) {
             const emptyMsg = document.getElementById('emptyMsg');
             if(emptyMsg) emptyMsg.remove();
-
             const historyList = document.getElementById('historyList');
             const patternIndex = (rowNum - 1) % 3;
-            
             const div = document.createElement('div');
-            
             const typeClass = (patternIndex === 2) ? 'type-pattern' : 'type-knit';
             div.className = `history-item ${typeClass}`;
-            
-            div.innerHTML = `
-                <span>${historyDescriptions[patternIndex]}</span>
-                <span class="h-row-num">#${rowNum}</span>
-            `;
-
-            // Insert at top
+            div.innerHTML = `<span>${historyDescriptions[patternIndex]}</span><span class="h-row-num">#${rowNum}</span>`;
             historyList.insertBefore(div, historyList.firstChild);
         }
 
         function finishRow() {
-            // Determine which row we just FINISHED
             const currentIndex = (totalRows - 1) % 3;
-
-            // Audio Logic:
-            // If currentIndex was 2 (Row 3), we just finished the hard row -> Play Success
-            // Otherwise -> Play Pop
-            if (currentIndex === 2) {
-                playSuccessSound();
-            } else {
-                playPopSound();
-            }
-
+            if (currentIndex === 2) playSuccessSound();
+            else playPopSound();
             addToHistory(totalRows);
             totalRows++;
             updateUI();
         }
 
         function resetCounter() {
-            if(confirm("Start over from Row 1?")) {
+            if(confirm("Start over?")) {
                 totalRows = 1;
-                document.getElementById('historyList').innerHTML = '<div style="text-align:center; color:#999; font-size: 0.9rem; margin-top:20px; font-style:italic;" id="emptyMsg">Ready to knit?</div>';
+                document.getElementById('historyList').innerHTML = '<div style="text-align:center; color:#999; font-size: 0.9rem; margin-top:20px; font-style:italic;" id="emptyMsg">Ready?</div>';
                 updateUI();
+                if ('setAppBadge' in navigator) navigator.clearAppBadge();
             }
         }
 
-        // Initialize
         updateUI();
     </script>
 </body>
