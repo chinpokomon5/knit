@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Knit Pop! With History</title>
+    <title>Knit Pop! v3</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #A0E7E5;
             --sidebar-bg: rgba(255, 255, 255, 0.6);
             --card-bg: #FFFFFF;
-            --accent-pink: #FFAEBC;
+            --accent-pink: #FF99AC;
             --accent-yellow: #FBE7C6;
             --text-dark: #2E2E2E;
             --btn-color: #B4F8C8;
@@ -30,7 +30,7 @@
             background-position: 0 0, 25px 25px;
             height: 100vh;
             overflow: hidden;
-            display: flex; /* Flex layout for split screen */
+            display: flex;
         }
 
         /* --- SIDEBAR (History) --- */
@@ -44,7 +44,6 @@
             flex-direction: column;
             padding: 20px 15px;
             box-sizing: border-box;
-            overflow-y: hidden; /* Header stays, list scrolls */
         }
 
         .sidebar h2 {
@@ -53,8 +52,7 @@
             font-size: 1.5rem;
             margin: 0 0 15px 0;
             text-align: center;
-            opacity: 0.7;
-            flex-shrink: 0;
+            opacity: 0.6;
         }
 
         .history-list {
@@ -67,22 +65,22 @@
         }
 
         .history-item {
-            border-radius: 15px;
-            padding: 12px;
+            border-radius: 12px;
+            padding: 10px;
             font-weight: 800;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .h-row-num {
             background: #fff;
-            padding: 3px 8px;
-            border-radius: 8px;
-            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.75rem;
             color: #888;
         }
 
@@ -103,104 +101,118 @@
             width: 85%;
             max-width: 550px;
             border-radius: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            padding: 30px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+            padding: 40px 30px;
             text-align: center;
             border: 8px solid var(--accent-pink);
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            z-index: 10;
+            gap: 20px;
+            position: relative;
         }
 
-        h1 {
+        /* --- NEW DOTS STYLING --- */
+        .tracker-container {
+            background: #F4FFFF;
+            border-radius: 30px;
+            padding: 20px 10px;
+            border: 3px solid #E0F7FA;
+        }
+
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 25px; /* Wider gap */
+            margin-bottom: 10px;
+        }
+
+        .dot {
+            width: 35px; /* Larger */
+            height: 35px; /* Larger */
+            border-radius: 50%;
+            background-color: #eee;
+            border: 4px solid #ddd;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-family: 'Fredoka One', cursive;
-            color: #FF6B6B;
-            font-size: 2.2rem;
-            margin: 0;
-            letter-spacing: 1px;
-        }
-
-        .row-display {
-            background-color: var(--accent-yellow);
-            border-radius: 20px;
-            padding: 15px;
-        }
-
-        .label {
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            color: #999;
-            margin-bottom: 5px;
-        }
-
-        .big-number {
-            font-family: 'Fredoka One', cursive;
-            font-size: 4.5rem;
-            color: var(--text-dark);
-            line-height: 1;
-        }
-
-        .instruction-box {
-            min-height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #f9f9f9;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* Number inside the dot */
+        .dot::after {
+            content: attr(data-num);
+        }
+
+        .dot.active {
+            transform: scale(1.3);
+            background-color: #FF6B6B;
+            border-color: #FF4757;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .pattern-row-label {
+            font-family: 'Fredoka One', cursive;
+            color: #FF6B6B;
+            font-size: 1.8rem;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- INSTRUCTION --- */
+        .instruction-box {
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #FFF8E1; /* Slight yellow tint */
             border-radius: 20px;
-            padding: 10px;
+            padding: 15px;
+            border: 3px dashed #FBE7C6;
         }
 
         .instruction-text {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 800;
             color: #4ECDC4;
-            line-height: 1.3;
+            line-height: 1.4;
         }
         
         .special-text { color: #FF6B6B; }
 
-        /* Dots */
-        .progress-dots {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 5px;
-        }
-        .dot {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            background-color: #eee;
-            transition: all 0.3s ease;
-        }
-        .dot.active {
-            transform: scale(1.4);
-            background-color: #FF6B6B;
-            box-shadow: 0 0 10px #FF6B6B;
-        }
-
-        /* Buttons */
+        /* --- BUTTONS --- */
         .btn-main {
             background-color: var(--btn-color);
             border: none;
-            padding: 25px;
+            padding: 30px;
             font-family: 'Fredoka One', cursive;
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: #006D46;
-            border-radius: 25px;
+            border-radius: 30px;
             cursor: pointer;
-            box-shadow: 0 8px 0 var(--btn-shadow);
+            box-shadow: 0 10px 0 var(--btn-shadow);
             transition: all 0.1s;
             width: 100%;
             margin-top: 10px;
             touch-action: manipulation;
         }
+
         .btn-main:active {
-            transform: translateY(8px);
+            transform: translateY(10px);
             box-shadow: 0 0 0 var(--btn-shadow);
+        }
+
+        /* --- FOOTER AREA --- */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #f0f0f0;
         }
 
         .reset-btn {
@@ -208,9 +220,18 @@
             border: none;
             color: #aaa;
             font-weight: bold;
-            margin-top: 10px;
             cursor: pointer;
             font-size: 0.9rem;
+            text-decoration: underline;
+        }
+
+        .total-counter {
+            background: #eee;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #777;
         }
 
         @keyframes popIn {
@@ -223,27 +244,24 @@
 <body>
 
     <div class="sidebar">
-        <h2>COMPLETED</h2>
+        <h2>HISTORY</h2>
         <div class="history-list" id="historyList">
             <div style="text-align:center; color:#999; font-size: 0.8rem; margin-top:20px; font-style:italic;" id="emptyMsg">
-                No rows finished yet!
+                Start knitting!
             </div>
         </div>
     </div>
 
     <div class="main-stage">
         <div class="card">
-            <h1>CURRENT ROW</h1>
             
-            <div class="progress-dots">
-                <div class="dot active" id="dot1"></div>
-                <div class="dot" id="dot2"></div>
-                <div class="dot" id="dot3"></div>
-            </div>
-    
-            <div class="row-display">
-                <div class="label">YOU ARE ON ROW</div>
-                <div class="big-number" id="rowCounter">1</div>
+            <div class="tracker-container">
+                <div class="progress-dots">
+                    <div class="dot active" id="dot1" data-num="1"></div>
+                    <div class="dot" id="dot2" data-num="2"></div>
+                    <div class="dot" id="dot3" data-num="3"></div>
+                </div>
+                <div class="pattern-row-label" id="patternLabel">ROW 1</div>
             </div>
     
             <div class="instruction-box">
@@ -251,27 +269,32 @@
             </div>
     
             <button class="btn-main" onclick="nextRow()">FINISH ROW!</button>
-            <button class="reset-btn" onclick="resetCounter()">Start Over</button>
+            
+            <div class="card-footer">
+                <button class="reset-btn" onclick="resetCounter()">Reset All</button>
+                <div class="total-counter">Total Rows: <span id="totalRowsDisplay">1</span></div>
+            </div>
+
         </div>
     </div>
 
     <script>
         let totalRows = 1;
         
-        // Pattern logic: 0=Row1(Knit), 1=Row2(Knit), 2=Row3(Pattern)
+        // Pattern logic: 0=Row1, 1=Row2, 2=Row3
         const instructions = [
             "Just <b>Knit</b>",
             "Just <b>Knit</b>",
             "K2, <span class='special-text'>*(yo, k2tog)</span> to last 2, K2"
         ];
 
-        // Short descriptions for the history log
         const historyDescriptions = [
-            "Knit Row",
-            "Knit Row",
-            "Pattern Row"
+            "Row 1 (Knit)",
+            "Row 2 (Knit)",
+            "Row 3 (Pattern)"
         ];
 
+        // Audio setup
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playPopSound() {
@@ -294,12 +317,16 @@
         }
 
         function updateUI() {
-            // Update Number
-            document.getElementById('rowCounter').innerText = totalRows;
+            // Update Total Count (small footer)
+            document.getElementById('totalRowsDisplay').innerText = totalRows;
             
-            // Calculate Index
+            // Calculate Pattern Index (0, 1, or 2)
             const patternIndex = (totalRows - 1) % 3;
+            const currentPatternRow = patternIndex + 1; // 1, 2, or 3
             
+            // Update Label below dots
+            document.getElementById('patternLabel').innerText = "ROW " + currentPatternRow;
+
             // Update Instructions
             document.getElementById('instruction').innerHTML = instructions[patternIndex];
 
@@ -307,11 +334,10 @@
             document.getElementById('dot1').classList.remove('active');
             document.getElementById('dot2').classList.remove('active');
             document.getElementById('dot3').classList.remove('active');
-            document.getElementById('dot' + (patternIndex + 1)).classList.add('active');
+            document.getElementById('dot' + currentPatternRow).classList.add('active');
         }
 
         function addToHistory(rowNum) {
-            // Remove empty message if it exists
             const emptyMsg = document.getElementById('emptyMsg');
             if(emptyMsg) emptyMsg.remove();
 
@@ -320,7 +346,7 @@
             
             const div = document.createElement('div');
             
-            // Assign class based on type (for color coding)
+            // Color coding class
             const typeClass = (patternIndex === 2) ? 'type-pattern' : 'type-knit';
             div.className = `history-item ${typeClass}`;
             
@@ -329,24 +355,20 @@
                 <span class="h-row-num">#${rowNum}</span>
             `;
 
-            // Insert at the top
             historyList.insertBefore(div, historyList.firstChild);
         }
 
         function nextRow() {
             playPopSound();
-            // Log the COMPLETED row to history
             addToHistory(totalRows);
-            
-            // Increment
             totalRows++;
             updateUI();
         }
 
         function resetCounter() {
-            if(confirm("Clear history and start over from Row 1?")) {
+            if(confirm("Start over from Row 1?")) {
                 totalRows = 1;
-                document.getElementById('historyList').innerHTML = '<div style="text-align:center; color:#999; font-size: 0.8rem; margin-top:20px; font-style:italic;" id="emptyMsg">No rows finished yet!</div>';
+                document.getElementById('historyList').innerHTML = '<div style="text-align:center; color:#999; font-size: 0.8rem; margin-top:20px; font-style:italic;" id="emptyMsg">Start knitting!</div>';
                 updateUI();
             }
         }
