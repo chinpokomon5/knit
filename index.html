@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Knit Pop! v3</title>
+    <title>Knit Pop! Mobile</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #A0E7E5;
-            --sidebar-bg: rgba(255, 255, 255, 0.6);
             --card-bg: #FFFFFF;
             --accent-pink: #FF99AC;
             --accent-yellow: #FBE7C6;
@@ -29,188 +28,132 @@
             background-size: 50px 50px;
             background-position: 0 0, 25px 25px;
             height: 100vh;
-            overflow: hidden;
-            display: flex;
-        }
-
-        /* --- SIDEBAR (History) --- */
-        .sidebar {
-            width: 28%;
-            height: 100vh;
-            background: var(--sidebar-bg);
-            backdrop-filter: blur(5px);
-            border-right: 4px solid rgba(255,255,255,0.5);
             display: flex;
             flex-direction: column;
-            padding: 20px 15px;
-            box-sizing: border-box;
+            overflow: hidden; /* Main body no scroll */
         }
 
-        .sidebar h2 {
-            font-family: 'Fredoka One', cursive;
-            color: var(--text-dark);
-            font-size: 1.5rem;
-            margin: 0 0 15px 0;
-            text-align: center;
-            opacity: 0.6;
-        }
-
-        .history-list {
-            flex-grow: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding-bottom: 20px;
-        }
-
-        .history-item {
-            border-radius: 12px;
-            padding: 10px;
-            font-weight: 800;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-size: 0.85rem;
-        }
-
-        .h-row-num {
-            background: #fff;
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            color: #888;
-        }
-
-        .type-knit { background-color: var(--history-knit); color: #2d6a4f; border: 2px solid #B7E4C7; }
-        .type-pattern { background-color: var(--history-pattern); color: #c9184a; border: 2px solid #FFB3C1; }
-
-        /* --- MAIN CONTENT --- */
+        /* --- MAIN STAGE (Top Section) --- */
         .main-stage {
-            flex-grow: 1;
+            flex: 0 0 auto; /* Don't shrink */
+            padding: 20px 20px 10px 20px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            position: relative;
+            z-index: 10;
         }
 
         .card {
             background: var(--card-bg);
-            width: 85%;
-            max-width: 550px;
-            border-radius: 40px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
-            padding: 40px 30px;
+            width: 100%;
+            max-width: 450px; /* Phone width limit */
+            border-radius: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 25px 20px;
             text-align: center;
-            border: 8px solid var(--accent-pink);
+            border: 6px solid var(--accent-pink);
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             position: relative;
         }
 
-        /* --- NEW DOTS STYLING --- */
+        /* --- TRACKER & DOTS --- */
         .tracker-container {
             background: #F4FFFF;
-            border-radius: 30px;
-            padding: 20px 10px;
+            border-radius: 25px;
+            padding: 15px 10px;
             border: 3px solid #E0F7FA;
         }
 
         .progress-dots {
             display: flex;
             justify-content: center;
-            gap: 25px; /* Wider gap */
-            margin-bottom: 10px;
+            gap: 20px;
+            margin-bottom: 8px;
         }
 
         .dot {
-            width: 35px; /* Larger */
-            height: 35px; /* Larger */
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background-color: #eee;
-            border: 4px solid #ddd;
+            border: 3px solid #ddd;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-family: 'Fredoka One', cursive;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
-        /* Number inside the dot */
-        .dot::after {
-            content: attr(data-num);
-        }
+        .dot::after { content: attr(data-num); }
 
         .dot.active {
             transform: scale(1.3);
             background-color: #FF6B6B;
             border-color: #FF4757;
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
         }
 
         .pattern-row-label {
             font-family: 'Fredoka One', cursive;
             color: #FF6B6B;
-            font-size: 1.8rem;
-            margin-top: 5px;
+            font-size: 1.5rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         /* --- INSTRUCTION --- */
         .instruction-box {
-            min-height: 120px;
+            min-height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #FFF8E1; /* Slight yellow tint */
+            background: #FFF8E1;
             border-radius: 20px;
             padding: 15px;
             border: 3px dashed #FBE7C6;
         }
 
         .instruction-text {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: #4ECDC4;
-            line-height: 1.4;
+            line-height: 1.3;
         }
         
         .special-text { color: #FF6B6B; }
 
-        /* --- BUTTONS --- */
+        /* --- BUTTON --- */
         .btn-main {
             background-color: var(--btn-color);
             border: none;
-            padding: 30px;
+            padding: 22px;
             font-family: 'Fredoka One', cursive;
-            font-size: 2rem;
+            font-size: 1.6rem;
             color: #006D46;
-            border-radius: 30px;
+            border-radius: 25px;
             cursor: pointer;
-            box-shadow: 0 10px 0 var(--btn-shadow);
+            box-shadow: 0 8px 0 var(--btn-shadow);
             transition: all 0.1s;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 5px;
             touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-main:active {
-            transform: translateY(10px);
+            transform: translateY(8px);
             box-shadow: 0 0 0 var(--btn-shadow);
         }
 
-        /* --- FOOTER AREA --- */
+        /* --- FOOTER (Reset & Total) --- */
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 5px;
             padding-top: 10px;
             border-top: 2px solid #f0f0f0;
         }
@@ -221,36 +164,87 @@
             color: #aaa;
             font-weight: bold;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-decoration: underline;
+            padding: 10px;
         }
 
         .total-counter {
             background: #eee;
-            padding: 5px 15px;
+            padding: 5px 12px;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: #777;
         }
 
-        @keyframes popIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            80% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); }
+        /* --- HISTORY SECTION (Bottom) --- */
+        .history-container {
+            flex: 1 1 auto; /* Grow to fill space */
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Contain scroll */
+            margin-top: 10px;
+        }
+
+        .history-header {
+            font-family: 'Fredoka One', cursive;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            text-align: center;
+            opacity: 0.5;
+            flex-shrink: 0;
+        }
+
+        .history-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-bottom: 30px; /* Space for scrolling */
+        }
+
+        .history-item {
+            background: white;
+            border-radius: 12px;
+            padding: 12px 15px;
+            font-weight: 800;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            animation: slideUp 0.3s ease-out;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .h-row-num {
+            background: #fff;
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #888;
+            border: 1px solid #eee;
+        }
+
+        .type-knit { background-color: var(--history-knit); color: #2d6a4f; border-left: 5px solid #B7E4C7; }
+        .type-pattern { background-color: var(--history-pattern); color: #c9184a; border-left: 5px solid #FFB3C1; }
+
+        @keyframes slideUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
 <body>
-
-    <div class="sidebar">
-        <h2>HISTORY</h2>
-        <div class="history-list" id="historyList">
-            <div style="text-align:center; color:#999; font-size: 0.8rem; margin-top:20px; font-style:italic;" id="emptyMsg">
-                Start knitting!
-            </div>
-        </div>
-    </div>
 
     <div class="main-stage">
         <div class="card">
@@ -268,13 +262,22 @@
                 <div class="instruction-text" id="instruction">Knit</div>
             </div>
     
-            <button class="btn-main" onclick="nextRow()">FINISH ROW!</button>
+            <button class="btn-main" onclick="finishRow()">FINISH ROW!</button>
             
             <div class="card-footer">
                 <button class="reset-btn" onclick="resetCounter()">Reset All</button>
-                <div class="total-counter">Total Rows: <span id="totalRowsDisplay">1</span></div>
+                <div class="total-counter">Total: <span id="totalRowsDisplay">1</span></div>
             </div>
 
+        </div>
+    </div>
+
+    <div class="history-container">
+        <div class="history-header">HISTORY LOG</div>
+        <div class="history-list" id="historyList">
+            <div style="text-align:center; color:#999; font-size: 0.9rem; margin-top:20px; font-style:italic;" id="emptyMsg">
+                Ready to knit?
+            </div>
         </div>
     </div>
 
@@ -294,9 +297,9 @@
             "Row 3 (Pattern)"
         ];
 
-        // Audio setup
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
+        // 1. Standard Bubble Pop
         function playPopSound() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             
@@ -316,18 +319,46 @@
             oscillator.stop(audioCtx.currentTime + 0.15);
         }
 
+        // 2. Special "Cha-Ching / Bell" Sound
+        function playSuccessSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const now = audioCtx.currentTime;
+            
+            // Oscillator 1: High tone
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.type = 'triangle';
+            osc1.frequency.setValueAtTime(1200, now); // Bell tone
+            gain1.gain.setValueAtTime(0.1, now);
+            gain1.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+            
+            // Oscillator 2: Harmonic
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(2400, now); // Harmonic
+            gain2.gain.setValueAtTime(0.1, now);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+
+            osc1.connect(gain1);
+            osc2.connect(gain2);
+            gain1.connect(audioCtx.destination);
+            gain2.connect(audioCtx.destination);
+
+            osc1.start();
+            osc2.start();
+            osc1.stop(now + 1.5);
+            osc2.stop(now + 1.5);
+        }
+
         function updateUI() {
-            // Update Total Count (small footer)
             document.getElementById('totalRowsDisplay').innerText = totalRows;
             
-            // Calculate Pattern Index (0, 1, or 2)
             const patternIndex = (totalRows - 1) % 3;
-            const currentPatternRow = patternIndex + 1; // 1, 2, or 3
+            const currentPatternRow = patternIndex + 1;
             
-            // Update Label below dots
             document.getElementById('patternLabel').innerText = "ROW " + currentPatternRow;
-
-            // Update Instructions
             document.getElementById('instruction').innerHTML = instructions[patternIndex];
 
             // Update Dots
@@ -346,7 +377,6 @@
             
             const div = document.createElement('div');
             
-            // Color coding class
             const typeClass = (patternIndex === 2) ? 'type-pattern' : 'type-knit';
             div.className = `history-item ${typeClass}`;
             
@@ -355,11 +385,23 @@
                 <span class="h-row-num">#${rowNum}</span>
             `;
 
+            // Insert at top
             historyList.insertBefore(div, historyList.firstChild);
         }
 
-        function nextRow() {
-            playPopSound();
+        function finishRow() {
+            // Determine which row we just FINISHED
+            const currentIndex = (totalRows - 1) % 3;
+
+            // Audio Logic:
+            // If currentIndex was 2 (Row 3), we just finished the hard row -> Play Success
+            // Otherwise -> Play Pop
+            if (currentIndex === 2) {
+                playSuccessSound();
+            } else {
+                playPopSound();
+            }
+
             addToHistory(totalRows);
             totalRows++;
             updateUI();
@@ -368,7 +410,7 @@
         function resetCounter() {
             if(confirm("Start over from Row 1?")) {
                 totalRows = 1;
-                document.getElementById('historyList').innerHTML = '<div style="text-align:center; color:#999; font-size: 0.8rem; margin-top:20px; font-style:italic;" id="emptyMsg">Start knitting!</div>';
+                document.getElementById('historyList').innerHTML = '<div style="text-align:center; color:#999; font-size: 0.9rem; margin-top:20px; font-style:italic;" id="emptyMsg">Ready to knit?</div>';
                 updateUI();
             }
         }
